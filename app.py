@@ -11,7 +11,7 @@ MODEL_FILE = "neckin_cut_level_model_v3.pkl"
 if not os.path.exists(MODEL_FILE):
 
     gdown.download(
-        "https://drive.google.com/uc?id=YOUR_FILE_ID",
+        "https://drive.google.com/uc?id=1EyBgYC0wPhQ8hpLEsrUlD3zBAkCAG5ZU",
         MODEL_FILE,
         quiet=False
     )
