@@ -2,7 +2,21 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import joblib
+import os
+import gdown
+import joblib
 
+MODEL_FILE = "neckin_cut_level_model_v3.pkl"
+
+if not os.path.exists(MODEL_FILE):
+
+    gdown.download(
+        "https://drive.google.com/uc?id=YOUR_FILE_ID",
+        MODEL_FILE,
+        quiet=False
+    )
+
+pipeline = joblib.load(MODEL_FILE)
 # =========================
 # PAGE CONFIG
 # =========================
