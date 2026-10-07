@@ -31,7 +31,7 @@ st.set_page_config(
 # =========================
 
 pipeline = joblib.load(
-    "neckin_cut_level_model_v2_compressed.pkl"
+    "neckin_cut_level_model_v3.pkl"
 )
 
 # =========================
