@@ -4,7 +4,19 @@ import plotly.express as px
 import joblib
 import os
 import gdown
-import joblib
+
+# =========================
+# PAGE CONFIG
+# =========================
+
+st.set_page_config(
+    page_title="Neck-In Simulator",
+    layout="wide"
+)
+
+# =========================
+# LOAD MODEL FROM GOOGLE DRIVE
+# =========================
 
 MODEL_FILE = "neckin_cut_level_model_v3.pkl"
 
@@ -17,22 +29,6 @@ if not os.path.exists(MODEL_FILE):
     )
 
 pipeline = joblib.load(MODEL_FILE)
-# =========================
-# PAGE CONFIG
-# =========================
-
-st.set_page_config(
-    page_title="Neck-In Simulator",
-    layout="wide"
-)
-
-# =========================
-# LOAD MODEL
-# =========================
-
-pipeline = joblib.load(
-    "neckin_cut_level_model_v3.pkl"
-)
 
 # =========================
 # BOND AREA TABLE
@@ -78,22 +74,15 @@ def simulate_recipe(
     cut_setup
 ):
 
-    widths = expand_cut_setup(
-        cut_setup
-    )
+    widths = expand_cut_setup(cut_setup)
 
     total_cuts = len(widths)
 
-    center = (
-        total_cuts + 1
-    ) / 2
+    center = (total_cuts + 1) / 2
 
     rows = []
 
-    for pos, width in enumerate(
-        widths,
-        start=1
-    ):
+    for pos, width in enumerate(widths, start=1):
 
         rows.append({
 
@@ -109,8 +98,7 @@ def simulate_recipe(
 
             "Coating": coating,
 
-            "Width_Rewinder":
-                width_rewinder,
+            "Width_Rewinder": width_rewinder,
 
             "CutWidth": width,
 
@@ -122,8 +110,7 @@ def simulate_recipe(
             "PositionPct":
                 pos / total_cuts,
 
-            "TotalCuts":
-                total_cuts,
+            "TotalCuts": total_cuts,
 
             "DistanceFromCenter":
                 pos - center
@@ -148,7 +135,6 @@ def simulate_recipe(
 
     return pred_df
 
-
 # =========================
 # HEADER
 # =========================
@@ -156,7 +142,7 @@ def simulate_recipe(
 st.title("📏 Neck-In Simulator")
 
 st.caption(
-    "Predict neck-in profile for each cut position."
+    "Predict neck-in for every cut position."
 )
 
 # =========================
@@ -169,28 +155,27 @@ with col1:
 
     technology = st.selectbox(
         "Technology",
-        options= ["", "SB", "SMS", "BSB"]
+        options=["", "SB", "SMS", "BSB"]
     )
 
-    basisweight = st.number_input(
+    basisweight = st.text_input(
         "Basis Weight (gsm)",
-        placeholder="Enter basis weight",
-        step=0.5
+        placeholder="Enter basis weight"
     )
 
     calander = st.selectbox(
         "Calander",
-        option=[""] + list(bond_area.keys())
+        options=[""] + list(bond_area.keys())
     )
 
 with col2:
 
     coating = st.selectbox(
         "Coating",
-            options=["", "Philic", "Phobic"]
+        options=["", "Philic", "Phobic"]
     )
 
-    width_rewinder = st.number_input(
+    width_rewinder = st.text_input(
         "Width Rewinder (mm)",
         placeholder="Enter rewinder width"
     )
@@ -208,6 +193,33 @@ if st.button("Predict Neck-In"):
 
     try:
 
+        if not technology:
+            st.error("Please select a Technology.")
+            st.stop()
+
+        if not calander:
+            st.error("Please select a Calander.")
+            st.stop()
+
+        if not coating:
+            st.error("Please select a Coating.")
+            st.stop()
+
+        if not basisweight:
+            st.error("Please enter Basis Weight.")
+            st.stop()
+
+        if not width_rewinder:
+            st.error("Please enter Width Rewinder.")
+            st.stop()
+
+        if not cut_setup:
+            st.error("Please enter a Cut Setup.")
+            st.stop()
+
+        basisweight = float(basisweight)
+        width_rewinder = float(width_rewinder)
+
         result = simulate_recipe(
             technology,
             basisweight,
@@ -218,17 +230,15 @@ if st.button("Predict Neck-In"):
         )
 
         avg_neck = (
-            result[
-                "PredictedNeckIn"
-            ].mean()
+            result["PredictedNeckIn"]
+            .mean()
         )
 
         trim = (
             width_rewinder
             -
-            result[
-                "FinishedWidth"
-            ].sum()
+            result["FinishedWidth"]
+            .sum()
         )
 
         # =====================
@@ -252,7 +262,7 @@ if st.button("Predict Neck-In"):
             )
 
         # =====================
-        # CHART
+        # PROFILE CHART
         # =====================
 
         fig = px.line(
@@ -274,7 +284,7 @@ if st.button("Predict Neck-In"):
         )
 
         # =====================
-        # RESULT TABLE
+        # TABLE
         # =====================
 
         display_df = result[
