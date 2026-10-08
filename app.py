@@ -280,7 +280,7 @@ if st.button("Predict Neck-In"):
             score
         )
 
-        # =====================
+               # =====================
         # METRICS
         # =====================
 
@@ -299,6 +299,7 @@ if st.button("Predict Neck-In"):
                 "Expected Trim",
                 f"{trim:.1f} mm"
             )
+
         with m3:
 
             st.metric(
@@ -306,17 +307,16 @@ if st.button("Predict Neck-In"):
                 confidence
             )
 
-# Put this AFTER all three metrics
-
-st.info(
-    f"""
+        st.info(
+            f"""
 Most Similar Historical Product:
 {nearest_product}
 
 Similarity Score:
 {score:.0f}%
 """
-)
+        )
+
 
         # =====================
         # PROFILE CHART
