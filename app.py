@@ -18,12 +18,12 @@ st.set_page_config(
 # LOAD MODEL FROM GOOGLE DRIVE
 # =========================
 
-MODEL_FILE = "neckin_cut_level_model_v3.pkl"
+MODEL_FILE = "neckin_cut_level_model_v5.pkl"
 
 if not os.path.exists(MODEL_FILE):
 
     gdown.download(
-        "https://drive.google.com/uc?id=1EyBgYC0wPhQ8hpLEsrUlD3zBAkCAG5ZU",
+        "https://drive.google.com/uc?id=1uxErFQwDyYjB26f690-r5pCiQEqTtP9Q",
         MODEL_FILE,
         quiet=False
     )
@@ -240,12 +240,23 @@ if st.button("Predict Neck-In"):
             result["FinishedWidth"]
             .sum()
         )
+score, nearest_product = get_confidence(
+
+    technology,
+    basisweight,
+    calander,
+    coating,
+    width_rewinder
+
+)
+
+confidence = confidence_label(score)
 
         # =====================
         # METRICS
         # =====================
 
-        m1, m2 = st.columns(2)
+        m1, m2, m3 = st.columns(3)
 
         with m1:
 
@@ -260,6 +271,21 @@ if st.button("Predict Neck-In"):
                 "Expected Trim",
                 f"{trim:.1f} mm"
             )
+        with m3:
+
+            st.metric(
+                "Confidence",
+                confidence
+            )
+            st.info(
+    f"""
+Most Similar Historical Product:
+{nearest_product}
+
+Similarity Score:
+{score:.0f}%
+"""
+)
 
         # =====================
         # PROFILE CHART
