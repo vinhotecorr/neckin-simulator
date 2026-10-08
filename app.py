@@ -301,10 +301,10 @@ if st.button("Predict Neck-In"):
             )
         with m3:
 
-    st.metric(
-        "Confidence",
-        confidence
-    )
+            st.metric(
+                "Confidence",
+                confidence
+            )
 
 # Put this AFTER all three metrics
 
