@@ -138,7 +138,33 @@ def simulate_recipe(
 # =========================
 # HEADER
 # =========================
+def get_confidence(
+    technology,
+    basisweight,
+    calander,
+    coating,
+    width_rewinder
+):
 
+    # Temporary version
+
+    score = 100
+    nearest_product = 211055
+
+    return score, nearest_product
+
+
+def confidence_label(score):
+
+    if score >= 90:
+        return "HIGH"
+
+    elif score >= 70:
+        return "MEDIUM"
+
+    else:
+        return "LOW"
+        
 st.title("📏 Neck-In Simulator")
 
 st.caption(
@@ -240,17 +266,19 @@ if st.button("Predict Neck-In"):
             result["FinishedWidth"]
             .sum()
         )
-score, nearest_product = get_confidence(
+        score, nearest_product = get_confidence(
 
-    technology,
-    basisweight,
-    calander,
-    coating,
-    width_rewinder
+            technology,
+            basisweight,
+            calander,
+            coating,
+            width_rewinder
 
-)
+        )
 
-confidence = confidence_label(score)
+        confidence = confidence_label(
+            score
+        )
 
         # =====================
         # METRICS
@@ -273,11 +301,14 @@ confidence = confidence_label(score)
             )
         with m3:
 
-            st.metric(
-                "Confidence",
-                confidence
-            )
-            st.info(
+    st.metric(
+        "Confidence",
+        confidence
+    )
+
+# Put this AFTER all three metrics
+
+st.info(
     f"""
 Most Similar Historical Product:
 {nearest_product}
