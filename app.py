@@ -169,38 +169,35 @@ with col1:
 
     technology = st.selectbox(
         "Technology",
-        ["SB", "SMS", "BSB"]
+        options= ["", "SB", "SMS", "BSB"]
     )
 
     basisweight = st.number_input(
         "Basis Weight (gsm)",
-        value=18.0,
+        placeholder="Enter basis weight",
         step=0.5
     )
 
     calander = st.selectbox(
         "Calander",
-        list(bond_area.keys())
+        option=[""] + list(bond_area.keys())
     )
 
 with col2:
 
     coating = st.selectbox(
         "Coating",
-        [
-            "Philic",
-            "Phobic"
-        ]
+            options=["", "Philic", "Phobic"]
     )
 
     width_rewinder = st.number_input(
         "Width Rewinder (mm)",
-        value=5290
+        placeholder="Enter rewinder width"
     )
 
 cut_setup = st.text_input(
     "Cut Setup",
-    ""
+    placeholder="Example: 12x194,7x250,2x280"
 )
 
 # =========================
