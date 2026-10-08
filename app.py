@@ -139,71 +139,18 @@ def simulate_recipe(
 # HEADER
 # =========================
 def get_confidence(
-
     technology,
     basisweight,
     calander,
     coating,
     width_rewinder
-
 ):
 
-    sample = pd.DataFrame([{
+    score = 100
+    nearest_product = 211055
 
-        "Technology":
-        tech_encoder.transform(
-            [technology]
-        )[0],
-
-        "Basis-Weight":
-        basisweight,
-
-        "Calander":
-        cal_encoder.transform(
-            [calander]
-        )[0],
-
-        "Coating":
-        coat_encoder.transform(
-            [coating]
-        )[0],
-
-        "Width_Rewinder":
-        width_rewinder
-
-    }])
-
-    distance, idx = (
-        nn.kneighbors(sample)
-    )
-
-    distance = distance[0][0]
-
-    score = max(
-        0,
-        min(
-            100,
-            round(
-                100 - distance,
-                0
-            )
-        )
-    )
-
-    nearest_product = (
-
-        historical_recipes
-        .iloc[idx[0][0]]
-
-        ["Item Number"]
-
-    )
-
-    return (
-        score,
-        nearest_product
-    )
-
+    return score, nearest_product
+    
 def confidence_label(score):
 
     if score >= 90:
