@@ -195,12 +195,12 @@ with col2:
 
     width_rewinder = st.number_input(
         "Width Rewinder (mm)",
-        value=5238
+        value=
     )
 
 cut_setup = st.text_input(
     "Cut Setup",
-    "10x170,9x330"
+    ""
 )
 
 # =========================
