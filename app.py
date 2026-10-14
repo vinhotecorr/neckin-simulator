@@ -203,6 +203,15 @@ with col2:
         "Coating",
         options=["", "Philic", "Phobic"]
     )
+    slitter = st.selectbox(
+        "Slitter",
+        [
+            "SVL21",
+            "SVL22",
+            "SVL23",
+            "SVL24"
+        ]
+    )
 
     width_rewinder = st.text_input(
         "Width Rewinder (mm)",
