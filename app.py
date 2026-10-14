@@ -211,7 +211,7 @@ def get_confidence(
         )
     )
 
-    nearest_product = (
+    nearest_product = int(
         historical_recipes
         .iloc[idx[0][0]]
         ["Item Number"]
