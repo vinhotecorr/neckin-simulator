@@ -36,7 +36,7 @@ nn = joblib.load(
 )
 
 historical_recipes = joblib.load(
-    "historical_recipes.pkl"
+    "historical_recipes.csv"
 )
 
 tech_encoder = joblib.load(
