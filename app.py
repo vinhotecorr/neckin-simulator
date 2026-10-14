@@ -35,7 +35,7 @@ nn = joblib.load(
     "nearest_recipe.pkl"
 )
 
-historical_recipes = joblib.load(
+historical_recipes = pd.read_csv(
     "historical_recipes.csv"
 )
 
