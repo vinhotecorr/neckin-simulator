@@ -31,6 +31,26 @@ if not os.path.exists(MODEL_FILE):
 
 pipeline = joblib.load(MODEL_FILE)
 
+nn = joblib.load(
+    "nearest_recipe.pkl"
+)
+
+historical_recipes = joblib.load(
+    "historical_recipes.pkl"
+)
+
+tech_encoder = joblib.load(
+    "tech_encoder.pkl"
+)
+
+cal_encoder = joblib.load(
+    "cal_encoder.pkl"
+)
+
+coat_encoder = joblib.load(
+    "coat_encoder.pkl"
+)
+
 # =========================
 # BOND AREA TABLE
 # =========================
@@ -152,10 +172,55 @@ def get_confidence(
     width_rewinder
 ):
 
-    score = 100
-    nearest_product = 211055
+    sample = pd.DataFrame([{
 
-    return score, nearest_product
+        "Technology":
+        tech_encoder.transform(
+            [technology]
+        )[0],
+
+        "Basis-Weight":
+        basisweight,
+
+        "Calander":
+        cal_encoder.transform(
+            [calander]
+        )[0],
+
+        "Coating":
+        coat_encoder.transform(
+            [coating]
+        )[0],
+
+        "Width_Rewinder":
+        width_rewinder
+
+    }])
+
+    distance, idx = (
+        nn.kneighbors(sample)
+    )
+
+    distance = distance[0][0]
+
+    score = max(
+        0,
+        round(
+            100 - distance,
+            0
+        )
+    )
+
+    nearest_product = (
+        historical_recipes
+        .iloc[idx[0][0]]
+        ["Item Number"]
+    )
+
+    return (
+        score,
+        nearest_product
+    )
     
 def confidence_label(score):
 
