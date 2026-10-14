@@ -19,12 +19,12 @@ st.set_page_config(
 # LOAD MODEL FROM GOOGLE DRIVE
 # =========================
 
-MODEL_FILE = "neckin_cut_level_model_v6.pkl"
+MODEL_FILE = "neckin_cut_level_model_v7.pkl"
 
 if not os.path.exists(MODEL_FILE):
 
     gdown.download(
-        "https://drive.google.com/uc?id=1PNjtC-ZhusS-ROCHdxydRJH8Q0tOZzEa",
+        "https://drive.google.com/uc?id=1nw5JeAZWua90CS3Mfltwo2bUaTXHf8xe",
         MODEL_FILE,
         quiet=False
     )
