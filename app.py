@@ -4,6 +4,7 @@ import plotly.express as px
 import joblib
 import os
 import gdown
+import numpy as np
 
 # =========================
 # PAGE CONFIG
@@ -18,12 +19,12 @@ st.set_page_config(
 # LOAD MODEL FROM GOOGLE DRIVE
 # =========================
 
-MODEL_FILE = "neckin_cut_level_model_v5.pkl"
+MODEL_FILE = "neckin_cut_level_model_v6.pkl"
 
 if not os.path.exists(MODEL_FILE):
 
     gdown.download(
-        "https://drive.google.com/uc?id=1uxErFQwDyYjB26f690-r5pCiQEqTtP9Q",
+        "https://drive.google.com/uc?id=1PNjtC-ZhusS-ROCHdxydRJH8Q0tOZzEa",
         MODEL_FILE,
         quiet=False
     )
@@ -35,15 +36,12 @@ pipeline = joblib.load(MODEL_FILE)
 # =========================
 
 bond_area = {
-    "SOFT CD-ROD": 10.0,
     "CD ROD": 10.0,
     "OE": 18.0,
     "SB2+": 13.9,
     "SOFT CIRCLE": 25.0,
-    "SOFT CIRCLES": 25.0,
     "HONEYCOMB": 16.2,
-    "SOFT DOT": 12.0,
-    "SOFT DOTS": 12.0
+    "SOFT DOT": 12.0
 }
 
 # =========================
@@ -70,6 +68,7 @@ def simulate_recipe(
     basisweight,
     calander,
     coating,
+    slitter,
     width_rewinder,
     cut_setup
 ):
@@ -98,6 +97,8 @@ def simulate_recipe(
 
             "Coating": coating,
 
+            "Slitter": slitter,
+
             "Width_Rewinder": width_rewinder,
 
             "CutWidth": width,
@@ -122,9 +123,14 @@ def simulate_recipe(
     pred_df["PredictedNeckIn"] = (
         pipeline.predict(pred_df)
     )
+    pred_df["RoundedNeckIn"] = (
+    np.floor(
+        pred_df["PredictedNeckIn"] + 0.5
+    )
+).astype(int)
 
     pred_df["NeckInPerSide"] = (
-        pred_df["PredictedNeckIn"] / 2
+        pred_df["RoundedNeckIn"] / 2
     )
 
     pred_df["FinishedWidth"] = (
@@ -248,6 +254,7 @@ if st.button("Predict Neck-In"):
             basisweight,
             calander,
             coating,
+            slitter,
             width_rewinder,
             cut_setup
         )
@@ -345,7 +352,7 @@ Similarity Score:
             [
                 "Position",
                 "CutWidth",
-                "PredictedNeckIn",
+                "RoundedNeckIn",
                 "NeckInPerSide",
                 "FinishedWidth"
             ]
